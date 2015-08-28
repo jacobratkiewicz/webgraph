@@ -9,3 +9,6 @@ cleaning it up.
 I have moved on  and do not have much time  to answer questions about
 setup  and compilation,  so this  code is  provided AS-IS.  With that
 said, I hope it is useful or at least interesting.
+
+You will notice a lot of TODOs and commented-out unimplemented
+methods. Feel free to write them :)
