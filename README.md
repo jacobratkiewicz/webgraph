@@ -12,3 +12,6 @@ said, I hope it is useful or at least interesting.
 
 You will definitely need Boost (http://www.boost.org/) to make this
 work.
+
+You will notice a lot of TODOs and commented-out unimplemented
+methods. Feel free to write them :)
