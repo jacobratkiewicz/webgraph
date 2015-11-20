@@ -23,6 +23,7 @@
 #include <string>
 #include <vector>
 #include <utility>
+#include <climits>
 
 #include <boost/progress.hpp>
 #include <boost/shared_ptr.hpp>
