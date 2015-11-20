@@ -25,6 +25,7 @@
 #include <cassert>
 #include <string>
 #include <sstream>
+#include <limits>
 #include <exception>
 #include <stdexcept>
 #include <boost/shared_ptr.hpp>
