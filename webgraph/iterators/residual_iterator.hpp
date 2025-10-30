@@ -106,8 +106,13 @@ val_type residual_iterator<val_type>::next() {
    if ( ! has_next() )
       throw logic_error( "Trying to dereference empty residual_iterator." );
    i--;
+
    if ( prev == -1 ) 
-      return prev = node + utils::nat2int( owner->read_residual( *ibs ) );
+   {
+      int res = owner->read_residual( *ibs );
+      return prev = node + utils::nat2int( res );
+      //return prev = node + utils::nat2int( owner->read_residual( *ibs ) );
+   }
    else 
       return prev = owner->read_residual( *ibs ) + prev + 1;
 } 

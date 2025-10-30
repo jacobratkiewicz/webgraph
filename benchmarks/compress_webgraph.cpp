@@ -52,6 +52,7 @@ int main( int argc, char** argv ) {
       quantum = 10000;
 
    bool offline = false, write_offsets = false;
+   (void) offline;   // not used yet
 
    ostringstream help_message_oss;
 

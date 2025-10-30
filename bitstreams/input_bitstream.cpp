@@ -25,7 +25,7 @@
 
 #include "../utils/fast.hpp"
 
-#define LOGGING
+// #define LOGGING
 
 namespace webgraph {
 using namespace std;
@@ -142,8 +142,10 @@ int ibitstream::read() {
    if ( avail == 0 ) {
       // then the buffer is empty. attempt to fill it again.
       if( is != NULL )
+      {
          assert( buffer->size() == buffer->capacity() );
          avail = is->readsome( (char*)&(*buffer).at(0), buffer->size() ); // used to be capacity
+      }
 #ifdef LOGGING         
       cerr << "==================================================\n";
       cerr << "BUFFER REFILLED; first 50 bytes : \n";
@@ -185,7 +187,7 @@ int ibitstream::read_from_current( unsigned int len ) {
       // We just empty everything.
       read_bits += len;
       fill = 0;
-      int retval = current & ( 1 << len ) - 1;
+      int retval = current & (( 1 << len ) - 1);
 #ifdef LOGGING
       cerr << "\tread_from_current(" << len << ") = " << retval << " "
            << "(current=" << utils::int_to_binary(current,fill) << ")\n";
@@ -222,11 +224,11 @@ void ibitstream::read( byte bits[], unsigned int len ) {
       
    if ( len <= fill ) {
       if ( len <= 8 ) {
-         bits[ 0 ] = (byte)( read_from_current( len ) << 8 - len );
+         bits[ 0 ] = (byte)( read_from_current( len ) << (8 - len) );
          return;
       } else {
          bits[ 0 ] = (byte)( read_from_current( 8 ) );
-         bits[ 1 ] = (byte)( read_from_current( len - 8 ) << 16 - len );
+         bits[ 1 ] = (byte)( read_from_current( len - 8 ) << (16 - len) );
          return;
       }
    } else {
@@ -239,7 +241,7 @@ void ibitstream::read( byte bits[], unsigned int len ) {
          
       const unsigned int shift = fill;
 
-      bits[ j ] = (byte)( read_from_current( shift ) << 8 - shift );
+      bits[ j ] = (byte)( read_from_current( shift ) << (8 - shift) );
       len -= shift;
 
       i = len >> 3;
@@ -247,7 +249,7 @@ void ibitstream::read( byte bits[], unsigned int len ) {
          b = read();
          // used to be >>>
          bits[ j ] |= (( b & 0xFF ) >> shift) & 0xFF; // the last & 0xFF is mine.
-         bits[ ++j ] = (byte)( b << 8 - shift );
+         bits[ ++j ] = (byte)( b << (8 - shift) );
       }
          
       read_bits += len & ~7;
@@ -255,10 +257,10 @@ void ibitstream::read( byte bits[], unsigned int len ) {
       len &= 7;
       if ( len != 0 ) {
          if ( len <= 8 - shift ) {
-            bits[ j ] |= (byte)( read_from_current( len ) << 8 - shift - len );
+            bits[ j ] |= (byte)( read_from_current( len ) << (8 - shift - len) );
          } else {
             bits[ j ] |= (byte)( read_from_current( 8 - shift ) );
-            bits[ j + 1 ] = (byte)( read_from_current( len + shift - 8 ) << 16 - shift - len );
+            bits[ j + 1 ] = (byte)( read_from_current( len + shift - 8 ) << (16 - shift - len) );
          }
       }
    }
@@ -383,7 +385,7 @@ void ibitstream::set_position( unsigned long position ) {
       
    int pos = (int)this->pos;
 
-   if ( delta <= avail && delta >= - pos ) {
+   if ( delta <= (int)avail && delta >= - pos ) {
       // We can reposition just by moving into the buffer.
       avail -= delta;
       pos += delta;
@@ -409,7 +411,7 @@ int ibitstream::read_unary() {
    if ( fill < 8 ) 
       refill();
       
-#if 1
+#ifdef LOGGING
    cerr << "current: " << current << endl
         << "fill: " << fill << endl;
 #endif
@@ -425,7 +427,7 @@ int ibitstream::read_unary() {
 
       read_bits += x + 1;
       fill -= x + 1;
-#if 1
+#ifdef LOGGING
       cerr << "1. read_unary() = " << x << endl;
 #endif
       return x;
@@ -437,7 +439,7 @@ int ibitstream::read_unary() {
    x += 7 - ( fill = BYTEMSB[ current ] );
    read_bits += x + 1;
 
-#if 1
+#ifdef LOGGING
    cerr << "2. read_unary() = " << x << endl;
 #endif
    return x;
@@ -765,7 +767,7 @@ int ibitstream::read_zeta( int k ) {
          if ( pre_comp != 0 ) {
             read_bits += pre_comp >> 8;
             fill -= pre_comp >> 8;
-#if 1
+#ifdef LOGGING
             cerr << "\t1. read_zeta returning " << (pre_comp & 0xFF) << endl;
 #endif
             return pre_comp & 0xFF;
@@ -778,7 +780,7 @@ int ibitstream::read_zeta( int k ) {
    const int m = read_int( h * k + k - 1 );
    if ( m < left ) {
       int retval = m + left - 1;
-#if 1
+#ifdef LOGGING
       cerr << "\t2. read_zeta returning " << retval << endl;
 #endif
       return retval;
@@ -786,7 +788,7 @@ int ibitstream::read_zeta( int k ) {
 
    int retval = ( m << 1 ) + read_bit() - 1;
 
-#if 1
+#ifdef LOGGING
    cerr << "\t3. read_zeta returning " << retval << endl;
 #endif
    

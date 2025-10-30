@@ -24,7 +24,7 @@
 #include <cassert>
 #include <vector>
 #include <boost/program_options.hpp>
-#include <boost/progress.hpp>
+// #include <boost/progress.hpp>
 
 unsigned generate_uniform_random_graph( unsigned num_vertices, unsigned num_edges, std::ostream& dest_file );
 
@@ -71,7 +71,7 @@ unsigned generate_uniform_random_graph( unsigned num_vertices, unsigned num_edge
 
    srandom(time(NULL));
 
-   boost::progress_display progress( num_vertices );
+   boost::timer::progress_display progress( num_vertices );
 
    dest_file << num_vertices << "\n";
 

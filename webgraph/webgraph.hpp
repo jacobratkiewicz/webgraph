@@ -25,7 +25,8 @@
 #include <utility>
 #include <climits>
 
-#include <boost/progress.hpp>
+// #include <boost/progress.hpp>
+#include <boost/timer/progress_display.hpp>
 #include <boost/shared_ptr.hpp>
 
 #include "types.hpp"

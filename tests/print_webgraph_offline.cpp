@@ -50,8 +50,10 @@ int main( int argc, char** argv ) {
 //   cerr << "here are vertices:\n";
    
    cerr << gp->get_num_nodes() << endl;
+
    
    while( n != n_end ) {
+      cerr << *n << endl;
 //       webgraph::bv_graph::graph::successor_iterator succ, succ_end;
 
 //       tie( succ, succ_end ) = successors( n );

@@ -44,10 +44,10 @@
 #include <algorithm>
 #include <iterator>
 
-#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/regex.hpp>
-#include <boost/program_options.hpp>
-#include <boost/progress.hpp>
+// #include <boost/program_options.hpp>
+// #include <boost/progress.hpp>
 
 #include "../utils/fast.hpp"
 #include "../bitstreams/tests/debug_obitstream.hpp"
@@ -869,6 +869,8 @@ const
    // ref>0).
    ref_index = ( x - ref + cyclic_buffer_size ) % cyclic_buffer_size; 
    
+   // cerr << "OK 871" << endl;
+
    // This catches both no references at all and no reference specifically for this node.
    if ( ref > 0 ) { 
       if ( ( block_count = read_block_count( *ibs ) ) !=  0 ) 
@@ -929,6 +931,7 @@ const
    internal_succ_itor_ptr res_itor;
    
    if( residual_count != 0 ) {
+      // cerr << "run here residual_count=" << residual_count << endl;
       res_itor.reset( new residual_iterator<int>(x, residual_count, this, ibs) );
    } 
 #ifndef CONFIG_FAST
@@ -936,9 +939,16 @@ const
       lg() << LEVEL_EVERYTHING << "chose NOT to create res_itor.\n";
    }
 #endif
+
+   // if(res_itor != NULL && x == 325556) {
+   //    cerr << "res_itor has_next:" << res_itor->has_next() << endl;
+   //    cerr << "res_itor next:" << res_itor->next() << endl;
+   // }
       
    // The extra part is made by the contribution of intervals, if any, and by the residuals iterator.
    internal_succ_itor_ptr extra_itor;
+
+   // cerr << "interval_count=" << interval_count << " residual_count=" << residual_count << endl;
    
    typedef int successor_t;
    
@@ -968,7 +978,14 @@ const
 
       extra_itor.reset( new merged_itor_t( merge_1, res_itor ) );
    }
+
+   // if(extra_itor != NULL && x == 325556) {
+   //    cerr << "extra has_next:" << extra_itor->has_next() << endl;
+   //    cerr << "extra next:" << extra_itor->next() << endl;
+   // }
    
+   // cerr << "OK 974" << endl;
+
    internal_succ_itor_ptr block_iterator;
    
    if( ref > 0 ) {
@@ -987,6 +1004,8 @@ const
       block_iterator.reset( new masked_iterator<int>(block, ref_list ) );
    }
    
+   //cerr << "OK 994, ref=" << ref << " extra=" << extra_itor << endl;
+
    if ( ref <= 0 ) {
 #ifndef CONFIG_FAST
       lg() << LEVEL_EVERYTHING
@@ -1007,6 +1026,7 @@ const
          typedef merged_iterator<int> mi_t;
 
          internal_succ_itor_ptr r(new mi_t( block_iterator, extra_itor, d ) );
+         // cerr << "OK 1016" << endl;
 #ifndef CONFIG_FAST
          lg() << LEVEL_EVERYTHING
               << "Returning that complicated merged iterator:\n"
@@ -1283,8 +1303,6 @@ void graph::load_internal( string basename, int offset_step, std::ostream* log )
    // load a graph stored using " + props.getProperty( "graphclass" ) );
    
 //    ibitstream offset_ibs;
-   
-   ibitstream offset_ibs( basename + ".offsets", STD_BUFFER_SIZE );
 
 //    if ( offset_step > 0 ) 
 //       offset_ibs = ibitstream( basename + ".offsets", STD_BUFFER_SIZE );
@@ -1346,7 +1364,7 @@ void graph::load_internal( string basename, int offset_step, std::ostream* log )
       
       if ( offset_step == 1 ) {
          // read offsets, if required
-         
+         ibitstream offset_ibs( basename + ".offsets", STD_BUFFER_SIZE );
          offset.resize( n + 1 );
          
          //pm.print( "Loading offsets..." );
@@ -2104,11 +2122,11 @@ void graph::store_offline_graph_internal( webgraph::ascii_graph::offline_graph o
    //       pm.start();
    //    }
 
-   boost::shared_ptr<boost::progress_display> pp;
+   boost::shared_ptr<boost::timer::progress_display> pp;
 
    if( log != NULL ) {
       *log << "Compressing graph...\n";
-      pp.reset( new boost::progress_display( olg.get_num_nodes(), *log ) );
+      pp.reset( new boost::timer::progress_display( olg.get_num_nodes(), *log ) );
    }
 
    // We iterate over the nodes of graph

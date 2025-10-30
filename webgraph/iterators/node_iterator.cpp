@@ -90,6 +90,8 @@ void node_iterator::increment() {
       graph::internal_succ_itor_ptr itor;
       
       itor = owner->get_successors_internal( curr, ibs, window, outd, block_outdegrees );
+
+      // cerr << "get_successors_internal\n";
       
       if( window[cur_index].size() < (unsigned)outd[cur_index] )
          window[cur_index ].resize( outd[cur_index] );

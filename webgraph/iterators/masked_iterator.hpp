@@ -213,7 +213,7 @@ template<class val_type>
 int masked_iterator<val_type>::skip( int n ) {
    int skipped = 0;
    
-   while( skipped < n && ( left > 0 || left == -1 && not_over ) ) {
+   while( skipped < n && ( left > 0 || (left == -1 && not_over) ) ) {
       if ( left == -1 ) 
          skipped += underlying->skip( n - skipped );
       else {

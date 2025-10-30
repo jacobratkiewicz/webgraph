@@ -184,7 +184,7 @@ int obitstream::write_byte_offset( const byte bits[],
    if ( len <= free ) {
       /// used to be >>>
       // this is okay because bits[] is unsigned, so 0's will be shifted in
-      return write_in_current( bits[ offset ] >> 8 - len, len );
+      return write_in_current( bits[ offset ] >> (8 - len), len );
    }
    else {
       const int shift = free;
@@ -193,7 +193,7 @@ int obitstream::write_byte_offset( const byte bits[],
 //      cerr << "shift = " << shift << endl;
          
       // used to be >>>
-      write_in_current( bits[ offset ] >> 8 - shift, shift );
+      write_in_current( bits[ offset ] >> (8 - shift), shift );
          
       len -= shift;
          
@@ -201,7 +201,7 @@ int obitstream::write_byte_offset( const byte bits[],
       i = len >> 3;
       while( i-- != 0 ) {
          // used to be >>>
-         write( bits[ j ] << shift | ( bits[ j + 1 ] & 0xFF ) >> 8 - shift );
+         write( bits[ j ] << shift | ( bits[ j + 1 ] & 0xFF ) >> (8 - shift) );
          written_bits += 8;
          j++;
       }
@@ -210,12 +210,12 @@ int obitstream::write_byte_offset( const byte bits[],
       if ( q != 0 ) {
          if ( q <= 8 - shift ) {
             /// used to be >>>
-            write_in_current( bits[ j ] >> 8 - shift - q, q );
+            write_in_current( bits[ j ] >> (8 - shift - q), q );
          }
          else {
             write_in_current( bits[ j ], 8 - shift );
             /// used to be >>>
-            write_in_current( bits[ j + 1 ] >> 16 - q - shift, q + shift - 8 );
+            write_in_current( bits[ j + 1 ] >> (16 - q - shift), q + shift - 8 );
          }
       }
          

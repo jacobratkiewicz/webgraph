@@ -452,7 +452,7 @@ private:
                       << utils::int_to_binary( current, fill )
                       << "\n";
 #endif      
-         } catch( eof_exception e ) {
+         } catch( eof_exception& e ) {
             // don't care.
          }
       }

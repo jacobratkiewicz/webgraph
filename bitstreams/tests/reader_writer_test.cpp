@@ -46,7 +46,7 @@ int main(int, char**) {
 
 	cerr << "Done with files.. now time for arrays.\n";
 
-	shared_ptr< vector<unsigned char> > res = test_write_to_array( b, sizeof(somebits) );
+	boost::shared_ptr< vector<unsigned char> > res = test_write_to_array( b, sizeof(somebits) );
 	
 	cerr << "We've written .. now let's see how it looks.\n";
     cerr << "The bytes of res[] are " << endl;

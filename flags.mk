@@ -1,9 +1,12 @@
 # Change these to match your configuration
 
-INCLUDES = /u/jpr/old_code/webgraph
-LIBS = /u/jpr/old_code/webgraph
-
-#LIBS = /u/jpr/workspace/cpp_webgraph
+ifdef BOOST_ROOT
+	INCLUDES = $(BOOST_ROOT)/include
+	LIBS = $(BOOST_ROOT)/lib
+else
+	INCLUDES = .
+	LIBS = .
+endif
 
 base = -I$(INCLUDES) -L$(LIBS) -Wall
 
@@ -14,9 +17,10 @@ else
 endif
 
 ifndef CONFIG_DBG
-	FLAGS = $(base) -DCONFIG_FAST -O3 $(prof)
+	CONFIG_FAST = 1
+	FLAGS = $(base) -DCONFIG_FAST -std=c++11 -O3 $(prof) -DBOOST_TIMER_ENABLE_DEPRECATED
 else
-	FLAGS = $(base) -DCONFIG_FAST -g $(prof)
+	FLAGS = $(base) -DCONFIG_FAST -DLOGGING -std=c++11 -g $(prof) -DBOOST_TIMER_ENABLE_DEPRECATED
 endif
 
 #FLAGS = -I$(INCLUDES) -Wall -g

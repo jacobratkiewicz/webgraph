@@ -25,7 +25,7 @@
 #include <fstream>
 #include <cassert>
 
-#include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/shared_ptr.hpp>
 
 #include "../log/logger.hpp"
 
